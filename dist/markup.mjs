@@ -1,0 +1,10 @@
+// The rack and its detail dialog as one HTML string. build.mjs writes it into
+// the standalone page; the Next.js wrapper renders it server-side. Both then
+// call mountShirtRail() on the .shirt-rail element.
+import { kits, initialIndex, rackSVG, escapeHTML as esc } from './kits.mjs';
+
+export function shirtRailMarkup(){
+  const buttons = kits.map((k,i)=>`<div class="slot" data-index="${i}"><button class="kit" type="button" role="option" aria-selected="${i===initialIndex}" aria-label="Shirt ${i+1}, ${esc(k.club)}, ${esc(k.season)}${k.player?`, ${esc(k.player)}, number ${k.number}`:''}. Lift shirt for details" tabindex="${i===initialIndex?0:-1}" data-index="${i}" style="z-index:${i===initialIndex?kits.length+1:i+1}">${rackSVG(k,i)}</button></div>`).join('');
+  return `<div class="shirt-rail" style="--kit-count:${kits.length}"><section class="rack-room" aria-label="Football shirt collection"><div class="rail" aria-hidden="true"><i></i><i></i></div><div class="rack-strip" role="listbox" aria-label="Football shirt collection" aria-orientation="horizontal"><div class="rack-track">${buttons}</div></div></section>`
+    + `<dialog aria-modal="true" aria-labelledby="shirt-rail-club" aria-describedby="shirt-rail-season shirt-rail-note"><div class="dialog-panel"><button class="close" type="button" aria-label="Close shirt details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><div class="photo-stage"><figure class="polaroid"><div class="photo-window"><span class="photo-placeholder">Photo to come</span></div><figcaption><span class="polaroid-caption"></span><span class="polaroid-number" aria-hidden="true"></span></figcaption></figure></div><div class="dialog-copy"><span class="dialog-number"></span><h2 class="dialog-club" id="shirt-rail-club"></h2><p class="dialog-season" id="shirt-rail-season"></p><p class="dialog-note" id="shirt-rail-note"></p><span class="dialog-footnote">Worn. Remembered. Kept.</span></div></div></dialog></div>`;
+}

@@ -1,14 +1,9 @@
 import { writeFile } from 'node:fs/promises';
-import { kits, initialIndex, rackSVG, escapeHTML as esc } from './dist/kits.mjs';
-const k = kits[initialIndex];
-const buttons = kits.map((k,i)=>`<div class="slot" data-index="${i}"><button class="kit" type="button" role="option" aria-selected="${i===initialIndex}" aria-label="${esc(k.club)}, ${esc(k.season)}. Lift shirt for details" tabindex="${i===initialIndex?0:-1}" data-index="${i}" style="z-index:${i===initialIndex?40:i+1}">${rackSVG(k,i)}</button></div>`).join('');
+import { kits } from './dist/kits.mjs';
+import { shirtRailMarkup } from './dist/markup.mjs';
 await writeFile(new URL('./dist/index.html',import.meta.url), `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>The shirt rail — A personal collection</title><meta name="description" content="Nineteen football shirts. A little history, hung up at home. Explore an interactive football jersey rack."><link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./style.css"></head>
-<body><main><header class="masthead"><a href="./" class="wordmark" aria-label="The shirt rail home"><svg viewBox="0 0 32 25" aria-hidden="true"><path d="M16 8c-6 0-6-7-1-7 5 0 5 5 2 6v4L2 21h28L17 11"/></svg>The shirt rail</a><span class="collection-count">A personal collection <span>19 shirts</span></span></header>
-<section aria-labelledby="title" class="collection"><div class="intro"><h1 id="title">Some shirts.<br>A lot of stories.</h1><p>Collected over the years.<br>Kept for the feeling.</p></div>
-<div class="rack-room"><div class="rail" aria-hidden="true"><i></i><i></i></div><div class="rack-strip" role="listbox" aria-label="Football shirt collection" aria-orientation="horizontal"><div class="rack-track">${buttons}</div></div></div>
-<div class="selection" aria-live="polite" aria-atomic="true"><span class="selection-number">${String(initialIndex+1).padStart(2,'0')} <span>/ 19</span></span><div><h2 id="selected-club">${esc(k.club)}</h2><p id="selected-season">${esc(k.season)}</p></div><span class="selection-action">Pick a shirt. Take a closer look.</span></div>
-<noscript><p class="no-js">A selection from the collection. Enable JavaScript to browse and lift the shirts.</p></noscript>
-</section><footer><span>A wardrobe, not a trophy cabinet.</span><span class="desktop-help">Browse with your cursor or arrow keys</span><span class="mobile-help">Swipe the rail to explore</span></footer></main>
-<dialog aria-modal="true" aria-labelledby="dialog-club" aria-describedby="dialog-season dialog-note"><div class="dialog-panel"><button class="close" type="button" aria-label="Close shirt details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><div class="front-display"></div><div class="dialog-copy"><span class="dialog-number"></span><h2 id="dialog-club"></h2><p id="dialog-season"></p><p id="dialog-note"></p><div class="swatches" aria-label="Shirt colours"></div><span class="dialog-footnote">From the collection</span></div></div></dialog><script type="module" src="./app.js"></script></body></html>`);
-console.log('Built nineteen static shirts and the interactive rack.');
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>The shirt rail — A personal collection</title><meta name="description" content="${kits.length} football shirts. A little history, hung up at home. Explore an interactive football jersey rack."><link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./page.css">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script></head>
+<body><main>${shirtRailMarkup()}</main>
+<script type="module">import {mountShirtRail} from './app.js';mountShirtRail(document.querySelector('.shirt-rail'));</script></body></html>`);
+console.log(`Built ${kits.length} static shirts and the interactive rack.`);

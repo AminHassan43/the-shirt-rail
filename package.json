@@ -1,1 +1,1 @@
-{"name":"the-shirt-rail","version":"1.0.0","private":true,"type":"module","scripts":{"build":"node build.mjs","start":"node server.mjs"}}
+{"name":"the-shirt-rail","version":"1.0.0","private":true,"type":"module","scripts":{"build":"node build.mjs","start":"node server.mjs"},"dependencies":{"three":"0.186.0"}}

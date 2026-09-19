@@ -1,0 +1,3 @@
+/* Standalone page only: a full-height white page holding the rack. */
+html,body{margin:0;background:#fff}
+main{height:100dvh}
